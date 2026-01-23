@@ -4,3 +4,4 @@ function add(a, b) {
 
 x = add(2,3)
 print(x)
+add(10,33)
