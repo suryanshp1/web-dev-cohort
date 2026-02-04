@@ -1,0 +1,39 @@
+#parent {
+    border: 2px solid red;
+    width: 90vw;
+    height: 700px;
+}
+
+.child {
+    border: 2px solid blue;
+    height: 40px;
+    width: 40px;
+}
+
+#parent {
+    display: flex;
+    /* flex-direction: column; Row - Main Axis L to R | Column - Main Axis T to B */
+    flex-direction: row;
+    justify-content: start;
+    gap: 2px;
+    align-items: start;
+}
+
+.child-1 {
+    flex: 2;
+    order: 1;
+}
+
+.child-2 {
+    flex: 1;
+    order: 1;
+    /* align-self: flex-end; */
+}
+
+.child-3 {
+    order: 2;
+}
+
+.child-5 {
+    order: 2;
+}

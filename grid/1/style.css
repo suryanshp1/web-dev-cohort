@@ -1,0 +1,63 @@
+/* Dark Mode */
+
+body {
+    background-color: #121212;
+    color: azure;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+#parent {
+    border: 0.5px solid red;
+    display: grid;
+    /* grid-template-columns: 50px repeat(2, 150px) 50px; */
+    /* fr - fraction */
+    /* grid-template-columns: 1fr 2fr 1fr; */
+    grid-template-columns: 100px 1fr 2fr 1fr;
+    grid-template-rows: repeat(5, 100px);
+
+    /* gap: 30px; */
+    /* gap: 2em; */
+    /* gap: 20%; */
+
+    /* justify-content: center; */
+    /* justify-content: space-between; */
+
+    /* text-align: center; */
+}
+
+.child {
+    border: 1px solid rgb(220, 135, 149);
+    background-color: pink;
+    color: #000;
+
+    /* align-items: center; */
+    /* text-align: center;
+    align-content: center; */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* .child-6 {
+    grid-row-start: -2;
+    grid-row-end: -1;
+    grid-column-start: -3;
+    grid-column-end: -2;
+} */
+
+/* .child-6 {
+    grid-row: -2 / -1;
+    grid-column: -3 / -2;
+} */
+
+.child-6 {
+    /*         RS.  CS.  RE.  CE */
+    /* grid-area: -2 / -3 / -1 / -2; */
+    grid-area: 3 / 2 / span 2 / span 2;
+}
+
+.child-7 {
+    grid-column-start: 2;
+    grid-column-end: -2;
+}
