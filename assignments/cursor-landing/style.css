@@ -1,0 +1,62 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+}
+
+.parent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    /* border: 1px solid red; */
+    color: #ffffff;
+    background-color: #121212;
+}
+
+.logo {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.child-2 ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.child-2 li {
+    display: inline;
+    margin: 10px;
+}
+
+.child-2 li a {
+    text-decoration: none;
+    color: #dccbcb;
+    font-size: small;
+}
+
+.child-3 .button {
+    border-radius: 20px;
+    padding: 5px;
+    border: none;
+}
+
+.child-3 .signin {
+    background-color: #0f0e0e;
+    color: #f7f1f1;
+    border: 0.2px solid #848080;
+    min-width: 70px;
+    min-height: 20px;
+}
+
+.child-3 .download {
+    min-width: 80px;
+    min-height: 20px;
+}
+
+.logo img {
+    width: 98px;
+    height: 48px;
+}
