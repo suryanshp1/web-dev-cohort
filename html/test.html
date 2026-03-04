@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Systems CTO Dispatch</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #FAFAFA;
+  --text: #111111;
+  --subtle: #666;
+  --card: #FFFFFF;
+}
+
+body.dark {
+  --bg: #0D0D0D;
+  --text: #F5F5F5;
+  --subtle: #888;
+  --card: #161616;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: 0.3s ease;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 80px 20px;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 1.4rem;
+  margin-top: 80px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+p {
+  margin-bottom: 20px;
+  color: var(--subtle);
+}
+
+.hero {
+  margin-bottom: 100px;
+}
+
+.cta {
+  display: inline-block;
+  padding: 12px 24px;
+  border: 1px solid var(--text);
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.card {
+  background: var(--card);
+  padding: 30px;
+  border: 1px solid #2221;
+  margin-bottom: 30px;
+}
+
+.signal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  margin-top: 15px;
+}
+
+.toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+</style>
+</head>
+
+<body>
+
+<div class="toggle" onclick="toggleMode()">[ toggle mode ]</div>
+
+<div class="container">
+
+<div class="hero">
+<h1>The Systems CTO Dispatch</h1>
+<p>
+Architecture. AI Automation. Distributed Systems.  
+No hype. No noise. Only execution.
+</p>
+<a class="cta" href="#">Subscribe →</a>
+</div>
+
+<h2>Why This Exists</h2>
+<p>
+Most tech content is summaries. AI-generated. Repetitive.  
+This dispatch breaks down real system architectures, automation agents, performance optimizations, and monetizable engineering strategies.
+</p>
+
+<h2>About</h2>
+<p>
+I’m Suryansh Pandey — Senior Backend & AI Engineer.  
+I design distributed SaaS systems, LLM automation agents, and high-throughput architectures in cybersecurity environments.
+</p>
+
+<h2>Recent Dispatches</h2>
+
+<div class="card">
+<strong>How I Reduced a 2000s Query to 100s</strong>
+<p>Deep dive into execution plans, LRU caching, and IO-bound optimization strategies.</p>
+<div class="signal">Signal Score → Depth: 9 | Tactical: 8 | Systems: 10</div>
+</div>
+
+<div class="card">
+<strong>Designing a Safe AI Remediation Agent</strong>
+<p>Tool-calling guardrails, rollback mechanisms, and distributed orchestration patterns.</p>
+<div class="signal">Signal Score → Depth: 10 | Tactical: 9 | Systems: 10</div>
+</div>
+
+<h2>Subscribe</h2>
+<p>
+Weekly high-signal breakdowns for engineers building real systems.
+</p>
+<a class="cta" href="#">Join the Dispatch</a>
+
+</div>
+
+<script>
+function toggleMode() {
+  document.body.classList.toggle('dark');
+}
+</script>
+
+</body>
+</html>
