@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <input id="todoInput" type="text" placeholder="Enter your task here">
+        <button id="createButton">Create</button>
+    </div>
+    <div>
+        <ul id="todoContainer">
+            <!-- <li>Do JS</li>
+            <li>Do DSA and neetcode</li>
+            <li>Do job application</li> -->
+        </ul>
+    </div>
+
+    <script>
+        const createButtonRef = document.getElementById("createButton")
+        const todoInputRef = document.getElementById("todoInput")
+        const todoContainerRef = document.getElementById("todoContainer")
+
+
+        createButtonRef.addEventListener("click", function() {
+            const value = todoInputRef.value
+
+            // console.log(`Button is clicked : ${value}`)
+
+            const li = document.createElement("li");
+            li.innerText = value
+            li.addEventListener("click", function() {
+                li.remove();
+            })
+            
+            todoContainerRef.appendChild(li)
+            todoInputRef.value = ""
+        })
+    </script>
+</body>
+</html>

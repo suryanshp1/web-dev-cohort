@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <button id="clickbtn">Click Me</button>
+    <script>
+        // console.log(window.alert("This is an ALERT"))
+        // console.log(document)
+
+        let buttonRef = window.document.getElementById('clickbtn');
+        // buttonRef.remove()
+        // buttonRef = null
+
+        // buttonRef.click()
+
+        // buttonRef.style.backgroundColor = "pink";
+
+        // buttonRef.onclick = function() {
+        //     console.log("We need to do something in this function")
+        // }
+        // buttonRef.onclick = function() {
+        //     console.log("Save to DB")
+        // }
+
+        buttonRef.addEventListener("click", onClickHandler)
+        function onClickHandler() {
+            console.log("Button Clicked")
+            buttonRef.removeEventListener("click", onClickHandler)
+            buttonRef.remove()
+            buttonRef = null
+        }
+
+        // buttonRef.addEventListener("click", function() {
+        //     console.log("Save to DB")
+        // })
+
+        function saveDataToDB() {
+            console.log("Saving data to DB....")
+        }
+    </script>
+</body>
+</html>

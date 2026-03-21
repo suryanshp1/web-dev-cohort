@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple To-Do List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacOSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 35px;
+            color: #2c3e50;
+            font-size: 2.1rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+        }
+
+        #todoInput {
+            flex: 1;
+            padding: 16px 20px;
+            font-size: 1.05rem;
+            border: none;
+            outline: none;
+        }
+
+        #todoInput::placeholder {
+            color: #a0a0a0;
+        }
+
+        #createButton {
+            padding: 0 28px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            background: #4a6bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #createButton:hover {
+            background: #3a5aff;
+            transform: translateY(-1px);
+        }
+
+        #createButton:active {
+            transform: translateY(0);
+        }
+
+        #todoContainer {
+            list-style: none;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        #todoContainer li {
+            padding: 16px 20px;
+            font-size: 1.05rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            position: relative;
+            user-select: none;
+        }
+
+        #todoContainer li:last-child {
+            border-bottom: none;
+        }
+
+        #todoContainer li:hover {
+            background: #f8f9ff;
+            padding-left: 28px;
+        }
+
+        #todoContainer li::before {
+            content: "•";
+            position: absolute;
+            left: 12px;
+            color: #cbd5ff;
+            font-size: 1.4rem;
+            opacity: 0;
+            transition: all 0.2s;
+        }
+
+        #todoContainer li:hover::before {
+            opacity: 1;
+            left: 16px;
+        }
+
+        /* Completed / delete effect */
+        #todoContainer li:active,
+        #todoContainer li.clicked {
+            transform: scale(0.98);
+            background: #ffecec;
+            transition: all 0.12s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>My To-Do List</h1>
+
+        <div class="input-area">
+            <input id="todoInput" type="text" placeholder="What needs to be done?">
+            <button id="createButton">Add</button>
+        </div>
+
+        <ul id="todoContainer"></ul>
+    </div>
+
+    <script>
+        const createButtonRef = document.getElementById("createButton");
+        const todoInputRef   = document.getElementById("todoInput");
+        const todoContainerRef = document.getElementById("todoContainer");
+
+        (
+            async () => {
+                const repsonse = fetch("https://api.freeapi.app/api/v1/public/quotes", {
+                    method: "GET"
+                }).then(repsonse => repsonse.json())
+                .then((data) => {
+                    for (const obj of data.data.data) {
+                        const li = document.createElement('li')
+                        li.innerText = obj.content
+                        todoContainerRef.appendChild(li)
+                    }
+                })
+            }
+        )();
+
+        // Add task on button click
+        createButtonRef.addEventListener("click", addTask);
+
+        // Add task on Enter key
+        todoInputRef.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                addTask();
+            }
+        });
+
+        function addTask() {
+            const value = todoInputRef.value.trim();
+
+            if (value === "") return;
+
+            const li = document.createElement("li");
+            li.innerText = value;
+
+            // Click to delete with nice animation
+            li.addEventListener("click", function() {
+                li.style.opacity = "0";
+                li.style.transform = "translateX(30px)";
+                setTimeout(() => li.remove(), 300);
+            });
+
+            todoContainerRef.appendChild(li);
+            todoInputRef.value = "";
+            todoInputRef.focus();
+        }
+    </script>
+</body>
+</html>
