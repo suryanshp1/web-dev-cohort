@@ -58,4 +58,8 @@ userSchema.pre('save', async function(next) {
     next()
 })
 
+userSchema.methods.comparePassword = async function name(clearTextPassword) {
+    return bcrypt.compare(clearTextPassword, this.password)
+}
+
 export default mongoose.model("User", userSchema)
