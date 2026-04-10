@@ -10,4 +10,11 @@ dependencies = [
     "langchain>=1.2.15",
     "langchain-groq>=1.1.2",
     "langchain-openai>=1.1.12",
+    "python-dotenv>=1.2.2",
+    "tavily-python>=0.7.23",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.2.0",
 ]

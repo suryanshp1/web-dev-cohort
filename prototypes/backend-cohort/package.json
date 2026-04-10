@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:downv": "docker compose down -v"
   },
   "keywords": [],
   "author": "",

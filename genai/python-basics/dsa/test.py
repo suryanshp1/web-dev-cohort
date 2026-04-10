@@ -1,19 +1,17 @@
-def is_valid(s):
-    stack = []
-    mapping = {')': '(', '}': '{', ']': '['}
+from collections import defaultdict
 
-    for char in s:
-        if char in mapping.values():  # opening brackets
-            stack.append(char)
-        elif char in mapping:  # closing brackets
-            if not stack or stack[-1] != mapping[char]:
-                return False
-            stack.pop()
+def firstUniqChar(s: str) -> int:
+    d = defaultdict(int)
 
-    return len(stack) == 0
+    for c in s:
+        d[c] = d[c] + 1
+
+    for i, c in enumerate(s):
+        if d[c] == 1:
+            return i
+
+    return -1
 
 
-patterns = ['([{}])[]', '()()()()', '{()}[]', '([{}])[', '()(()()', '{()}]', '({)}']
-
-for p in patterns:
-    print(p, "→", is_valid(p))
+s = "loveleetcode"
+print(firstUniqChar(s))
