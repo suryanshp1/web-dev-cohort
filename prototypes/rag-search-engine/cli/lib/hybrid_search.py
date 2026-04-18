@@ -1,0 +1,103 @@
+import os
+
+from .keyword_search import InvertedIndex
+from .semantic_search import ChunkedSemanticSearch
+
+def weighted_search(query, alphs=0.5, limit=5):
+    hs = HybridSearch()
+    results = hs.weighted_search(query, alpha, limit)
+    for idx, result in enumerate(results[:limit]):
+        print(f"{idx+1} {result[:limit]}")
+        print(f"Hybrid Score: {result["hybrid_score"]}")
+        print(f"BM25 Score: {result["bm25_score"]}, Semantic: {r["sem_score"]}")
+        print(result["description"][:100])
+
+class HybridSearch:
+    def __init__(self, documents):
+        self.documents = documents
+        self.semantic_search = ChunkedSemanticSearch()
+        self.semantic_search.load_or_create_chunk_embeddings(documents)
+
+        self.idx = InvertedIndex()
+        if not os.path.exists(self.idx.index_path):
+            self.idx.build()
+            self.idx.save()
+
+    def _bm25_search(self, query, limit):
+        self.idx.load()
+        return self.idx.bm25_search(query, limit)
+
+    def weighted_search(self, query, alpha, limit=5):
+        bm25_results = self._bm25_search(query, limit*500)
+        sem_results = self.semantic_search.search_chunks(query, limit*500)
+
+        # 5000 bm25 scores
+        # 5000 sem scores
+        # 5 hybrid limit
+
+        # #1 bm25 + #6 sem
+        # #3 bm25 + #10 sem
+        # #2 bm25 + #11 sem
+
+        combined_results = combine_results(bm25_results, sem_results)
+
+        return combined_results
+
+    def rrf_search(self, query, k, limit=10):
+        raise NotImplementedError("RRF hybrid search is not implemented yet.")
+
+def hybrid_score(bm25_score, sem_score, alpha=0.5):
+    return (alpha * bm25_score) + ((1 - alpha) * sem_score)
+
+def normalize_search_results(results):
+    scores = [r['score'] for r in results]
+    norm_scores = normalize_scores(scores)
+    for idx, result in enumerate(results):
+        result["normalized_score"] = norm_scores[idx]
+    
+    return normalized_results
+
+def combine_results(bm25_results, sem_results):
+    bm25_norm = normalize_search_results(bm25_results)
+    sem_norm = normalize_search_results(sem_results)
+
+    combined_norm = {}
+
+    for norm in bm25_norm:
+        doc_id = norm["doc_id"]
+        combined_norm[doc_id] = {
+            "doc_id": doc_id,
+            "bm25_score": norm["normalized_score"],
+            "sem_score": 0.,
+            "title": norm["title"],
+            "description": norm["description"]
+        }
+
+    for norm in sem_norm:
+        doc_id = norm["id"]
+        combined_norm[doc_id] = {
+            "doc_id": doc_id,
+            "bm25_score": 0.,
+            "sem_score": 0.,
+            "title": norm["title"],
+            "description": norm["description"]
+        }
+        combined_norm[doc_id]["sem_score"] = norm["normalized_score"]
+
+    for k, v in combined_norm.items():
+        combined_norm[k]['hybrid_score'] = hybrid_score(v["bm25_score"], v["sem_score"])
+    
+    results = sorted(list(combined_norm.values()), key=lambda x: x['hybrid_score'], reverse=True)
+
+    return results
+
+def normalize_scores(scores):
+    if not scores: return []
+
+    min_score = min(scores)
+    max_score = max(scores)
+
+    if min_score == max_score: return [1.]*len(scores)
+
+    score_range = max_score - min_score
+    return [(score - min_score) / score_range for score in scores]
