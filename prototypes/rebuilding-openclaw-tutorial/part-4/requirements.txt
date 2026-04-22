@@ -1,0 +1,5 @@
+litellm
+pydantic-settings
+python-telegram-bot
+croniter
+rich
