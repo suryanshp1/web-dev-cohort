@@ -1,0 +1,98 @@
+// https://app.eraser.io/
+
+// users, posts, story, comments, likes, followers, bookmarks, account_setting
+
+users [icon: user, color: blue] {
+    id serial pk
+    username varchar(50) unique not null
+    email varchar(100) unique not null
+    phone char(15)
+    dob date
+    password varchar(256)
+    bio text
+    avatar_url text
+    forgot_password_token text
+    email_verification_token text
+
+    created_at timestamp
+    updated_at timestamp
+}
+
+posts [icon: notebook, color: red] {
+  id serial pk
+  caption text
+  image_url text null
+  video_url text null
+  reel_url text null
+
+  author_id int fk
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+stories [icon: notebook, color: green] {
+  id serial pk
+  image_url text null
+  video_url text null
+
+  post_id int fk null
+  author_id int fk
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+bookmarks[icon: bookmark, color: orange] {
+  id serial pk
+
+  post_id int fk
+  author_id int fk
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+account_setting [icon: settings-2, color: violet] {
+  id serial pk
+  user_id int fk
+
+  isAccountPrivate boolean
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+comments [icon: comment, color: white] {
+  id serial pk
+  content text
+
+  author_id int fk
+  post_id int fk
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+likes [icon: thumbs-up, color: black] {
+  id serial pk
+
+  author_id int fk
+  post_id int fk
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+users.id < posts.author_id // one to many
+users.id < stories.author_id
+users.id < bookmarks.author_id
+
+stories.post_id > posts.id // many to one
+bookmarks.post_id > posts.id
+comments.author_id > users.id
+comments.post_id > posts.id
+likes.author_id > users.id
+likes.post_id > posts.id
+
+users.id - account_setting.user_id // one to one
