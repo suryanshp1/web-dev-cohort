@@ -20,12 +20,6 @@ app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/owners", ownerRoutes)
 
-app.all("{*path}", (req, res) => {
-  throw ApiError.notFound(`Route ${req.originalUrl} not found`);
-});
-
-app.use(errorHandler);
-
 const upload = multer();
 
 app.post("/upload", upload.single("file"), (req, res) => {
@@ -33,5 +27,11 @@ app.post("/upload", upload.single("file"), (req, res) => {
 
   ApiResponse.ok(res, "file uploaded")
 })
+
+app.all("{*path}", (req, res) => {
+  throw ApiError.notFound(`Route ${req.originalUrl} not found`);
+});
+
+app.use(errorHandler);
 
 export default app;

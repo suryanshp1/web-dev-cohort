@@ -1,0 +1,57 @@
+books [icon: user, color: blue] {
+    id int autoincrement pk
+    ISBN text
+    publication_year int
+    genre text
+    created_at timestamp
+    updated_at timestamp
+}
+
+authors [icon: users, color: red] {
+    id int autoincrement pk
+    full_name text
+    country text
+    date_of_birth text
+    created_at timestamp
+    updated_at timestamp
+}
+
+author_book [icon: home, color: green] {
+    id string
+    author_id int FK
+    book_id int FK
+    created_at timestamp
+    updated_at timestamp
+}
+
+borrowers [icon: home, color: orange] {
+    id int autoincrement pk
+    full_name text
+    country string
+    date_of_birth string
+    created_at timestamp
+    updated_at timestamp
+}
+
+author_book [icon: home, color: green] {
+    id int autoincrement pk
+    author_id int FK
+    book_id int FK
+    created_at timestamp
+    updated_at timestamp
+}
+
+borrow_records [icon: home, color: green] {
+    id int autoincrement pk
+    borrower_id int FK
+    book_id int FK
+    status string
+    created_at timestamp
+    updated_at timestamp
+}
+
+books.id <> author_book.book_id
+authors.id <> author_book.author_id
+
+borrowers.id <> borrow_records.borrower_id
+books.id <> borrow_records.book_id

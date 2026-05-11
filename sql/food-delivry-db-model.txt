@@ -1,0 +1,92 @@
+users [icon: users, color: red] {
+    id int autoincrement pk
+    full_name text not null
+    email text not null
+    phone_number text not null unique
+    type text not null
+    address text
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+restaurants [icon: ice-cream-bowl, color: green] {
+    id int autoincrement pk
+    name text not null
+    address text not null
+    status text not null
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+menu_items [icon: menu, color: green] { 
+  id int autoincrement pk
+  name text
+  price decimal
+  category text
+  availability boolean
+  restaurant_id int fk
+  created_at timestamp not null
+  updated_at timestamp not null
+}
+
+orders [icon: menu, color: green] { 
+  id int autoincrement pk
+  user_id int fk
+  restaurant_id int fk
+  status text not null
+  placed_at timestamp not null
+  accepted_at timestamp
+  preparing_at timestamp
+  delivered_at timestamp
+  cancelled_at timestamp
+  out_for_delivery_at timestamp
+  payment_method text not null
+  delivery_instructions text
+  created_at timestamp not null
+  updated_at timestamp not null
+}
+
+order_items [icon: menu, color: green] { 
+  id int autoincrement pk
+  order_id int fk not null
+  menu_item_id int fk not null
+  quantity int
+  price_at_purchase decimal
+  created_at timestamp not null
+  updated_at timestamp not null
+}
+
+delivery_assignments [icon: menu, color: green] { 
+  id int autoincrement pk
+  order_id int fk
+  delivery_agent_id int fk
+  status text
+  assigned_at timestamp
+  pickedup_at timestamp
+  dropped_at text
+  expected_drop_at timestamp
+  created_at timestamp not null
+  updated_at timestamp not null
+}
+
+reviews [icon: menu, color: green] { 
+  id int autoincrement pk
+  reviewer_id int fk not null
+  restaurant_id int fk
+  delivery_agent_id int fk
+  rating int
+  comment text
+  created_at timestamp not null
+  updated_at timestamp not null
+}
+
+restaurants.id < menu_items.restaurant_id
+restaurants.id < orders.restaurant_id
+users.id < orders.user_id
+orders.id < order_items.order_id
+menu_items.id < order_items.menu_item_id
+orders.id - delivery_assignments.order_id
+users.id < delivery_assignments.delivery_agent_id
+users.id < reviews.reviewer_id
+restaurants.id < reviews.restaurant_id
+users.id < reviews.delivery_agent_id
