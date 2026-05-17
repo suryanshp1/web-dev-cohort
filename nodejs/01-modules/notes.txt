@@ -1,0 +1,2 @@
+his existing spec is about a different issue (server connection). 
+Your current problem is about route ordering causing a 403 error on the /upload endpoint.

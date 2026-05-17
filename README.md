@@ -8,3 +8,5 @@
 - Use node filename.js to run
 - Use bun filename.js to run
 - Use extensions like HTML and CSS and prettier etc to do auto suggestions and formatting
+
+AI proj idea : https://aiengineeringfromscratch.com/lesson.html?path=phases/19-capstone-projects/03-realtime-voice-assistant
