@@ -1,0 +1,220 @@
+Fitness Influencer Coaching Platform
+Web Dev Cohort 2026
+
+Databases
+
+Timeline
+Start: 7 Apr 2026, 11:00 am
+Due: 10 May 2026, 11:59 pm
+Eval Begins: 11 May 2026, 12:00 am
+Eval Ends: 13 May 2026, 11:59 pm
+Instructions
+A fitness influencer has started an online coaching business. Initially, they train a few people through Insta DMs and Meet video calls. As their brand grows, they now want a platform where they can onboard clients, sell fitness plans, schedule consultations, manage subscriptions, track client progress and maintain regular check-ins.
+
+Some users join only for consultation. Some buy long-term coaching plans. Some may attend live sessions, while others may only receive a training routine and diet guidance. The platform should also be able to track progress information such as weight, body measurements, check-in reports and trainer notes.
+
+Your job is to design the ER diagram for this platform.
+
+This is not a gym management problem. This is more of an online coaching ecosystem where one or more trainers/influencers manage multiple clients and provide structured online fitness support.
+
+What You Have to Do
+Your database design should support questions like:
+
+Who are the trainers and who are the clients?
+What plans or coaching programs exist?
+Which client purchased which plan?
+When does a client’s plan start and end?
+Are there consultations or sessions being scheduled?
+Are clients submitting check-ins weekly?
+How is progress being tracked?
+Can multiple clients enroll in the same program?
+Can one trainer handle many clients?
+How should payment and subscription information be stored?
+What to Make
+Design an ER diagram for this business.
+
+Your ER diagram should include:
+
+user/client related entities
+trainer or coach related entities
+plans/programs/subscriptions
+sessions or consultations
+progress tracking or check-in related structure
+payment related structure if needed
+primary keys and foreign keys
+relationships and cardinality
+Things to think about while designing:
+
+A trainer can coach many clients.
+A client may buy more than one plan over time.
+One plan can be subscribed to by many clients.
+Progress tracking should not be mixed directly into the user table.
+Sessions and check-ins are not the same thing.
+You should decide whether trainer notes or feedback should be stored separately.
+Think about whether diet plans and workout plans should be modeled directly or abstractly.
+Keep the design practical and not overcomplicated.
+You do not need to write SQL queries.
+You do not need to build frontend or backend.
+This task is only about database design.
+
+Submission Instructions
+Submit any one of the following:
+
+an image export of your ER diagram
+a PDF export of your ER diagram
+an Excalidraw / Eraser / Draw.io / FigJam board link
+a GitHub repository link containing the diagram file or exported image
+Submission expectations:
+
+one single board is preferred
+the diagram must be readable
+entity names and attribute names should be clearly visible
+PK and FK should be clearly marked
+relationship lines should not look random or confusing
+if you use GitHub, keep the diagram inside the repo properly and include a short README
+Evaluation Parameters
+Business Understanding (15 marks)
+Did the student understand the difference between coaching, plans, sessions, and progress tracking?
+Entity Design (20 marks)
+Are the core entities captured properly?
+Did they identify trainers, clients, subscriptions, plans, sessions, check-ins, and progress?
+Relationships and Cardinality (20 marks)
+Are trainer-client, plan-client, and session-client relationships modeled correctly?
+Attributes and Data Separation (15 marks)
+Are user details, plan details, and progress data separated properly?
+PK/FK Design (15 marks)
+Are keys properly assigned and linked?
+Practicality of the Model (10 marks)
+Does the model feel usable in a real coaching platform?
+Diagram Quality (5 marks)
+Is the ER diagram neat and readable?
+
+========
+
+users [icon: users, color: red] {
+    id int autoincrement pk
+    full_name varchar
+    email varchar
+    password_hash varchar
+    phone varchar
+    role enum(trainer, client)
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+trainers [icon: user, color: green] {
+    id int autoincrement pk
+    user_id	int fk
+    bio text
+    specialization varchar
+    experience_years int
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+clients [icon: user, color: green] {
+    id int autoincrement pk
+    user_id int fk
+    age int
+    gender varchar
+    height_cm decimal
+    fitness_goal text
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+plans [icon: menu, color: green] {
+    id int autoincrement pk
+    trainer_id fk	int
+    title varchar
+    description text
+    duration_weeks int
+    price decimal
+    plan_type varchar
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+subscriptions [icon: menu, color: green] {
+    id int autoincrement pk
+    client_id fk int
+    plan_id fk int
+    start_date date
+    end_date date
+    status enum(active, expired, cancelled)
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+sessions [icon: menu, color: green] {
+    id int autoincrement pk
+    trainer_id (FK)	int
+    client_id (FK)	int
+    session_type varchar
+    scheduled_at datetime
+    duration_minutes int
+    meeting_link varchar
+    status	enum(scheduled, completed, cancelled)
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+checkins [icon: menu, color: green] {
+    id int autoincrement pk
+    client_id int fk
+    submitted_at datetime
+    weight_kg decimal
+    sleep_hours decimal
+    energy_level int
+    notes text
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+progresstrackings [icon: menu, color: green] {
+    id int autoincrement pk
+    client_id int fk
+    recorded_at datetime
+    chest_cm decimal
+    waist_cm decimal
+    arms_cm decimal
+    body_fat_percent decimal
+    progress_photos_url varchar
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+trainernotes [icon: menu, color: green] {
+    id int autoincrement pk
+    trainer_id int fk
+    client_id int fk
+    checkin_id int fk
+    feedback text
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+payments [icon: menu, color: green] {
+    id int autoincrement pk
+    subscription_id int fk
+    amount decimal
+    payment_method varchar
+    payment_status varchar
+    paid_at datetime
+    created_at timestamp not null
+    updated_at timestamp not null
+}
+
+users.id - trainers.user_id	int
+users.id - clients.user_id
+trainers.id < plans.trainer_id
+clients.id < subscriptions.client_id
+plans.id < subscriptions.plan_id
+trainers.id < sessions.xtrainer_id
+clients.id < sessions.client_id
+clients.id < checkins.client_id
+clients.id < progresstrackings.client_id
+clients.id < trainernotes.client_id
+trainers.id < trainernotes.trainer_id
+checkins.id < trainernotes.checkin_id
+subscriptions.id < payments.subscription_id
