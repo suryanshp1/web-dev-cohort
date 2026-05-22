@@ -28,6 +28,34 @@ app.post('/signup', (req, res) => {
     return res.json({ status: "success" ,token })
 })
 
+app.post('/me', (req, res) => {
+    const { token } = req.body
+    if (!token) {
+        return res.status(400).json({ message: "Missing token" })
+    }
+
+    if (!token in DIARY) {
+        return res.status(400).json({ message: "Invalid token" })
+    }
+
+    const entry = DIARY[token]
+    return res.json({ data: entry })
+})
+
+app.post('/private-data', (req, res) => {
+    const { token } = req.body
+    if (!token) {
+        return res.status(400).json({ message: "Missing token" })
+    }
+
+    if (!token in DIARY) {
+        return res.status(400).json({ message: "Invalid token" })
+    }
+
+    const entry = DIARY[token]
+    return res.json({ data: { privateData: "Access granted" } })
+    })
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
 })
