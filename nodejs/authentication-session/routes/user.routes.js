@@ -6,7 +6,33 @@ import { randomBytes, createHmac } from 'node:crypto'
 
 const router = express.Router()
 
-router.get('/'); // returns current loggedIn user
+router.patch("/", async (req, res) => {
+    const user = req.user
+    
+    if (!user) {
+        return res.status(401).json({ message: "Unauthorized" })
+    }
+
+    const { name } = req.body
+
+    await db
+        .update(usersTable)
+        .set({ name })
+        .where(eq(usersTable.id, user.userId))
+    
+    return res.status(200).json({ status: "success" })
+})
+
+router.get('/', async (req, res) => {
+
+    const user = req.user
+
+    if (!user) {
+        return res.status(401).json({ message: "Unauthorized" })
+    }
+
+    return res.status(200).json({ user })
+}); // returns current loggedIn user
 
 router.post('/signup', async (req, res) => {
     const { name, email, password } = req.body
