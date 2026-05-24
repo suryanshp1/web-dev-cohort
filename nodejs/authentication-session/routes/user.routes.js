@@ -1,17 +1,15 @@
 import express from 'express'
 import db from '../db/index.js'
 import { usersTable, userSessions } from '../db/schema.js'
+import { ensureAuthenticatedMiddleware } from '../middlewares/auth.middleware.js'
 import { eq } from 'drizzle-orm'
 import { randomBytes, createHmac } from 'node:crypto'
+import jwt from 'jsonwebtoken'
 
 const router = express.Router()
 
-router.patch("/", async (req, res) => {
+router.patch("/", ensureAuthenticatedMiddleware,async (req, res) => {
     const user = req.user
-    
-    if (!user) {
-        return res.status(401).json({ message: "Unauthorized" })
-    }
 
     const { name } = req.body
 
@@ -23,13 +21,9 @@ router.patch("/", async (req, res) => {
     return res.status(200).json({ status: "success" })
 })
 
-router.get('/', async (req, res) => {
+router.get('/', ensureAuthenticatedMiddleware, async (req, res) => {
 
     const user = req.user
-
-    if (!user) {
-        return res.status(401).json({ message: "Unauthorized" })
-    }
 
     return res.status(200).json({ user })
 }); // returns current loggedIn user
@@ -67,7 +61,8 @@ router.post('/login', async (req, res) => {
             id: usersTable.id,
             email: usersTable.email,
             salt: usersTable.salt,
-            password: usersTable.password
+            role: usersTable.role,
+            password: usersTable.password,
         })
         .from(usersTable)
         .where((table) => eq(table.email, email))
@@ -88,7 +83,18 @@ router.post('/login', async (req, res) => {
         userId: existingUser.id,
     }).returning({ id: userSessions.id })
 
-    return res.status(200).json({ status: "success", sessionId: session.id })
+    const payload = {
+        id: existingUser.id,
+        email: existingUser.email,
+        name: existingUser.email,
+        role: existingUser.role,
+    }
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "4h"
+    })
+
+    return res.status(200).json({ status: "success", token })
 });
 
 router.post('/logout');
