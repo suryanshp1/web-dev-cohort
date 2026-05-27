@@ -9,4 +9,6 @@
 - Use bun filename.js to run
 - Use extensions like HTML and CSS and prettier etc to do auto suggestions and formatting
 
+- ollama launch opencode [run opencode with ollama + gemma e2b] or use claude code extension with vscode or codex or google antigravity or AIDER
+
 AI proj idea : https://aiengineeringfromscratch.com/lesson.html?path=phases/19-capstone-projects/03-realtime-voice-assistant
