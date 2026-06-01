@@ -1,5 +1,13 @@
-from abc import ABC, abstractmethod
+# from abc import ABC, abstractmethod
 
+
+# class NotificationChannel(ABC):
+#     @abstractmethod
+#     def send(self, message):
+#         pass
+
+
+from abc import ABC, abstractmethod
 
 class NotificationChannel(ABC):
     @abstractmethod
