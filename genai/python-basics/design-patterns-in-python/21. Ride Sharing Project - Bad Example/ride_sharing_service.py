@@ -61,6 +61,9 @@
 from typing import List
 from driver import Driver
 from passenger import Passenger
+from location import Location
+from math import sqrt
+from vehicle import Vehicle
 
 class RideSharingServiceApp:
     def __init__(self):
@@ -71,6 +74,15 @@ class RideSharingServiceApp:
     def add_driver(self, driver: Driver):
         self.drivers.append(driver)
 
+    def __calcDistance(self, location1: Location, location2: Location):
+        # Euclidean distance
+        dx: float = location1.get_latitude() - location2.get_latitude()
+        dy: float = location1.get_longitude() - location2.get_longitude()
+
+        return sqrt(dx*dx + dy*dy)
+
+    def __calcFare(self, )
+
     def bookRide(self, passenger: Passenger, distance: float):
         # Edge case
         if len(self.drivers) == 0:
@@ -80,4 +92,17 @@ class RideSharingServiceApp:
         # Hard coded logic assignment
         # Find the nearest driver
         # O(n) - Brute force
+        assignedDriver = None
+        minDistance = float("inf")
+        for driver in self.drivers:
+            currentDriverDistance = self.__calcDistance(passenger, location, driver.location)
+            if currentDriverDistance < minDistance:
+                minDistance = currentDriverDistance
+                assignedDriver = driver
+
+        # Fare calculation
+        expectedFare: float = __calcFare(assignedDriver.vehicle, distance)
+
+        # Show the fare to driver and passenger
+        print(f"Ride booked for {passenger.name} with driver {assignedDriver.name} with fare of Rs.{expectedFare}")
         
