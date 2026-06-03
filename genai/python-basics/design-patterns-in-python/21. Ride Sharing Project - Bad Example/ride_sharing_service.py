@@ -74,6 +74,9 @@ class RideSharingServiceApp:
     def add_driver(self, driver: Driver):
         self.drivers.append(driver)
 
+    def add_passenger(self, passenger: Passenger):
+        self.passengers.append(passenger)
+
     def __calcDistance(self, location1: Location, location2: Location):
         # Euclidean distance
         dx: float = location1.get_latitude() - location2.get_latitude()
@@ -81,7 +84,15 @@ class RideSharingServiceApp:
 
         return sqrt(dx*dx + dy*dy)
 
-    def __calcFare(self, )
+    def __calcFare(self, vehicle: Vehicle, distance: float):
+        if vehicle.type == "Car":
+            return distance * 20
+
+        elif vehicle.type == "Bike":
+            return distance * 12
+        
+        else:
+            return distance * 8
 
     def bookRide(self, passenger: Passenger, distance: float):
         # Edge case
@@ -95,13 +106,13 @@ class RideSharingServiceApp:
         assignedDriver = None
         minDistance = float("inf")
         for driver in self.drivers:
-            currentDriverDistance = self.__calcDistance(passenger, location, driver.location)
+            currentDriverDistance = self.__calcDistance(passenger.location, driver.location)
             if currentDriverDistance < minDistance:
                 minDistance = currentDriverDistance
                 assignedDriver = driver
 
         # Fare calculation
-        expectedFare: float = __calcFare(assignedDriver.vehicle, distance)
+        expectedFare: float = self.__calcFare(assignedDriver.vehicle, distance)
 
         # Show the fare to driver and passenger
         print(f"Ride booked for {passenger.name} with driver {assignedDriver.name} with fare of Rs.{expectedFare}")

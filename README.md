@@ -12,3 +12,7 @@
 - ollama launch opencode [run opencode with ollama + gemma e2b] or use claude code extension with vscode or codex or google antigravity or AIDER
 
 AI proj idea : https://aiengineeringfromscratch.com/lesson.html?path=phases/19-capstone-projects/03-realtime-voice-assistant
+
+https://arpitbhayani.me/applied-ai
+
+https://docs.google.com/document/d/1hBdMSxfCwD0XQVMXVM0y_Kvk5YlG6hO-w3yDOJTiu3I/edit?tab=t.0
