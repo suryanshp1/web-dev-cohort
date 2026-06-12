@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | OIDC Provider</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    .container { max-width: 800px; }
+    .card { padding: 2rem; }
+    .tabs { display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem; }
+    .tab { padding: 0.5rem 1rem; cursor: pointer; color: var(--text-secondary); border-bottom: 2px solid transparent; }
+    .tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+    th { color: var(--text-secondary); font-size: 0.875rem; font-weight: 500; }
+    td { font-size: 0.9rem; }
+    .code-block { background: var(--input-bg); padding: 0.5rem; border-radius: 4px; font-family: monospace; font-size: 0.8rem; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <div class="container" x-data="adminDashboard()">
+    <div class="card">
+      <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h1 style="margin: 0; text-align: left;">Admin Dashboard</h1>
+        <form action="/auth/logout" method="POST">
+          <button type="submit" class="btn" style="width: auto; margin: 0; padding: 0.5rem 1rem;">Logout</button>
+        </form>
+      </div>
+
+      <div class="tabs">
+        <div class="tab" :class="{ 'active': activeTab === 'users' }" @click="setTab('users')">Users</div>
+        <div class="tab" :class="{ 'active': activeTab === 'clients' }" @click="setTab('clients')">OAuth Clients</div>
+      </div>
+
+      <div x-show="activeTab === 'users'">
+        <h2>Users</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Email</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="user in users" :key="user.id">
+              <tr>
+                <td x-text="user.id.substring(0,8) + '...'"></td>
+                <td x-text="user.email"></td>
+                <td x-text="new Date(user.createdAt).toLocaleDateString()"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+      <div x-show="activeTab === 'clients'">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2>OAuth Clients</h2>
+          <button @click="showCreateClient = !showCreateClient" class="btn" style="width: auto; margin: 0; padding: 0.5rem 1rem;">+ New Client</button>
+        </div>
+
+        <div x-show="showCreateClient" style="background: var(--input-bg); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid var(--border-color);">
+          <h3>Create New Client</h3>
+          <form @submit.prevent="createClient">
+            <div class="form-group">
+              <label>App Name</label>
+              <input type="text" x-model="newClient.name" required>
+            </div>
+            <div class="form-group">
+              <label>Redirect URIs (comma separated)</label>
+              <input type="text" x-model="newClient.redirectUris" required placeholder="http://localhost:8080/callback">
+            </div>
+            <button type="submit" class="btn">Create Client</button>
+          </form>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Client ID</th>
+              <th>Redirect URIs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="client in clients" :key="client.id">
+              <tr>
+                <td x-text="client.name"></td>
+                <td><div class="code-block" x-text="client.clientId"></div></td>
+                <td><div class="code-block" x-text="client.redirectUris.join(', ')"></div></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function adminDashboard() {
+      return {
+        activeTab: 'users',
+        users: [],
+        clients: [],
+        showCreateClient: false,
+        newClient: {
+          name: '',
+          redirectUris: ''
+        },
+        
+        async init() {
+          this.fetchUsers();
+          this.fetchClients();
+        },
+
+        setTab(tab) {
+          this.activeTab = tab;
+        },
+
+        async fetchUsers() {
+          const res = await fetch('/admin/users');
+          if (res.ok) this.users = await res.json();
+        },
+
+        async fetchClients() {
+          const res = await fetch('/admin/clients');
+          if (res.ok) this.clients = await res.json();
+        },
+
+        async createClient() {
+          const uris = this.newClient.redirectUris.split(',').map(u => u.trim()).filter(u => u);
+          const res = await fetch('/admin/clients', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: this.newClient.name,
+              redirectUris: uris
+            })
+          });
+          
+          if (res.ok) {
+            const client = await res.json();
+            // In a real app we'd show the secret once
+            alert('Client created! Secret: ' + client.clientSecret + '\n\nPlease save this secret securely.');
+            this.showCreateClient = false;
+            this.newClient = { name: '', redirectUris: '' };
+            this.fetchClients();
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

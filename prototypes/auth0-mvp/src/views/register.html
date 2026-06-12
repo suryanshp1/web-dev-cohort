@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | OIDC Provider</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="card" x-data="registerForm()">
+      <div class="header">
+        <h1>Create Account</h1>
+        <p>Join the future of identity</p>
+      </div>
+
+      <form @submit.prevent="submitForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" x-model="email" required placeholder="name@example.com">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" x-model="password" required minlength="8" placeholder="••••••••">
+        </div>
+
+        <div class="form-group">
+          <label for="passwordConfirm">Confirm Password</label>
+          <input type="password" id="passwordConfirm" x-model="passwordConfirm" required minlength="8" placeholder="••••••••">
+        </div>
+
+        <div x-show="error" class="error-msg" x-text="error" style="display: none;"></div>
+        <div x-show="success" style="color: var(--success-color); font-size: 0.875rem; text-align: center; margin-top: 0.5rem; display: none;">Account created! Redirecting to login...</div>
+
+        <button type="submit" class="btn" :disabled="loading">
+          <span x-show="!loading">Sign Up</span>
+          <span x-show="loading">Creating account...</span>
+        </button>
+      </form>
+
+      <div class="footer">
+        Already have an account? <a href="/login.html">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function registerForm() {
+      return {
+        email: '',
+        password: '',
+        passwordConfirm: '',
+        error: '',
+        success: false,
+        loading: false,
+        
+        async submitForm() {
+          if (this.password !== this.passwordConfirm) {
+            this.error = "Passwords don't match";
+            return;
+          }
+
+          this.loading = true;
+          this.error = '';
+          
+          try {
+            const res = await fetch('/auth/register', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: this.email,
+                password: this.password,
+                passwordConfirm: this.passwordConfirm
+              }),
+              redirect: 'follow'
+            });
+
+            if (res.redirected) {
+              this.success = true;
+              setTimeout(() => {
+                window.location.href = res.url;
+              }, 1500);
+            } else if (!res.ok) {
+              const data = await res.json();
+              if (data.error && typeof data.error === 'string') {
+                this.error = data.error;
+              } else {
+                this.error = 'Registration failed';
+              }
+            }
+          } catch (err) {
+            this.error = 'Network error occurred';
+          } finally {
+            this.loading = false;
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
