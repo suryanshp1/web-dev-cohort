@@ -3,6 +3,12 @@ import path from "node:path"
 
 import express from "express"
 import { Server} from "socket.io"
+import { stat } from "node:fs"
+
+const CHECKBOX_COUNT = 100
+const state = {
+    checkboxes: new Array(CHECKBOX_COUNT).fill(false)
+}
 
 async function main() {
     const app = express()
@@ -11,6 +17,10 @@ async function main() {
 
     app.get("/health", (req, res) => {
         res.json({ message: "I am healthy" })
+    })
+
+    app.get("/checkboxes", (req, res) => {
+        res.json({ checkboxes: state.checkboxes })
     })
 
     const server = http.createServer(app)
@@ -22,7 +32,9 @@ async function main() {
         console.log(`Socket Connected `, {id: socket.id});
 
         socket.on("client:checkbox:change", (data) => {
-            
+            console.log(`[Socket:${socket.id}] - client:checkbox:change`, data)
+            io.emit("client:checkbox:change", data)
+            state.checkboxes[data.index] = data.checked
         })
     })
 
