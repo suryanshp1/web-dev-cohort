@@ -16,3 +16,5 @@ AI proj idea : https://aiengineeringfromscratch.com/lesson.html?path=phases/19-c
 https://arpitbhayani.me/applied-ai
 
 https://docs.google.com/document/d/1hBdMSxfCwD0XQVMXVM0y_Kvk5YlG6hO-w3yDOJTiu3I/edit?tab=t.0
+
+https://courseflix.net/course/advanced-distributed-systems-design

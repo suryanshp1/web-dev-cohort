@@ -226,18 +226,6 @@ Instead of solving 500 questions:
   * Writing clean Python
   * Explaining your logic
 
----
-
-# 🚀 If You Want Next Level Prep
-
-I can also:
-
-* Give **Top 50 MUST-DO questions (with solutions)**
-* Conduct a **mock interview (startup-style)**
-* Focus on **FastAPI + AI backend interview prep (very relevant for you)**
-
-Just tell me 👍
-
 
 ======
 
