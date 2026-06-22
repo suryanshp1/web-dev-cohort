@@ -20,9 +20,25 @@
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="/socket.io/socket.io.js"></script>
 
     <script>
+        const socket = io();
         const map = L.map('map').setView([51.505, -0.09], 13);
+
+        const remoteMarkers = new Map()
+        socket.on('server:location:update', (data) => {
+            const { id, latitude, longitude } = data
+            if (!remoteMarkers.has(id)) {
+                const marker = L.marker([latitude, longitude])
+                                    .addTo(map)
+                                    .bindPopup(id)
+                remoteMarkers.set(id, marker)
+            } else {
+                const existingMarker = remoteMarkers.get(id)
+                existingMarker.setLatLng([latitude, longitude])
+            }
+        })
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -53,12 +69,31 @@
 
         // getUsersCurrentLocation().then((p) => console.log({ p }))
 
+        let myCurrentLocationMarker = null
+
         async function main() {
-            setInterval(() => {
-                
+            setInterval(async () => {
+                const {latitude, longitude} = await getUsersCurrentLocation()
+                socket.emit('client:location:update', { latitude, longitude })
+                if (!myCurrentLocationMarker) {
+                    map.setView(
+                        [latitude, longitude],
+                        15
+                    );
+
+                    L.marker([
+                        latitude,
+                        longitude,
+                    ])
+                        .addTo(map)
+                        .bindPopup('You are here')
+                        .openPopup();
+                } else {
+                    myCurrentLocationMarker.setLatLng([latitude, longitude])
+                }
             }, 10*1000)
 
-            const userLocation = await getUsersCurrentLocation()
+            // const userLocation = await getUsersCurrentLocation()
 
             map.setView(
                 [userLocation.latitude, userLocation.longitude],
