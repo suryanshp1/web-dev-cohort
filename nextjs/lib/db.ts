@@ -1,0 +1,27 @@
+import { PrismaClient } from "@/app/generated/prisma/client";
+import { PrismaNeon } from "@prisma/adapter-neon";
+
+const globalForPrisma = globalThis as unknown as {
+    prisma: PrismaClient | undefined;
+};
+
+// const adapter = new PrismaNeon({connectionString: process.env.DATABASE_URL});
+
+// export const prisma = new PrismaClient({
+//     adapter: adapter,
+// });
+
+function createPrismaClient() {
+    const url = process.env.DATABASE_URL;
+    if (!url) {
+        throw new Error("Missing DATABASE_URL environment variable");
+    }
+    const adapter = new PrismaNeon({connectionString: url});
+    return new PrismaClient({adapter});
+}
+
+export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+
+if (process.env.NODE_ENV !== "production") {
+    globalForPrisma.prisma = prisma;
+}
