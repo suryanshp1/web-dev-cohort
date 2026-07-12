@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createTodo } from "../../actions/todo";
 
 type Todo = {
   id: string;
@@ -42,18 +43,22 @@ export default function TodoList() {
     if (!title.trim()) return;
 
     try {
-      const res = await fetch("/api/todos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
-      });
-      const result = await res.json();
-      if (result.success) {
-        setTodos([...todos, result.data]);
-        setTitle("");
-      } else {
-        setError(result.error);
-      }
+      // const res = await fetch("/api/todos", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ title }),
+      // });
+      // const result = await res.json();
+      // if (result.success) {
+      //   setTodos([...todos, result.data]);
+      //   setTitle("");
+      // } else {
+      //   setError(result.error);
+      // }
+
+      const todo = await createTodo(title);
+      setTodos([...todos, todo]);
+      setTitle("");
     } catch (err) {
       setError("Failed to add todo");
     }
