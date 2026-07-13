@@ -1,0 +1,15 @@
+.p-16 {
+  padding: 16px;
+}
+
+.bg-blue {
+  background-color: #2563eb;
+}
+
+.text-white {
+  color: white;
+}
+
+.rounded {
+  border-radius: 8px;
+}
