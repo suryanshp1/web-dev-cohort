@@ -18,3 +18,5 @@ https://arpitbhayani.me/applied-ai
 https://docs.google.com/document/d/1hBdMSxfCwD0XQVMXVM0y_Kvk5YlG6hO-w3yDOJTiu3I/edit?tab=t.0
 
 https://courseflix.net/course/advanced-distributed-systems-design
+
+https://class-100xengineers.notion.site/Applied-AI-Open-Capstone-Series-Resource-Hub-36364ba4f187810cbf7bf627e68a9d2c
